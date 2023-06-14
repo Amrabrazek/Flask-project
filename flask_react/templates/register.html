@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+<!-- {% block styling %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='about.css') }}">
+{% endblock styling %} -->
+
+{% block content %}
+
+<div>
+    <form action="" method="POST">
+        {{ data.form.hidden_tag() }}
+
+        <fieldset class = "form-group">
+            <legend class="border-bottom mb4"></legend>
+            <div class="form-group">
+                {{ data.form.email.label(class = "form-control-label") }}
+
+                {% if data.form.email.errors %}
+                    {{ data.form.email(class = "form-control is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in data.form.email.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ data.form.email(class = "form-control") }}
+                    
+                {% endif %}
+            </div>
+        </fieldset>
+
+        <fieldset class = "form-group">
+            <legend class="border-bottom mb4"></legend>
+            <div class="form-group">
+                {{ data.form.password.label(class = "form-control-label") }}
+                {{ data.form.password(class = "form-control") }}
+            </div>
+        </fieldset>
+
+        <fieldset class = "form-group">
+            <legend class="border-bottom mb4"></legend>
+            <div class="form-group">
+                {{ data.form.confirm_password.label(class = "form-control-label") }}
+                {{ data.form.confirm_password(class = "form-control") }}
+            </div>
+        </fieldset>
+
+
+        <div class="form-group btn btn-outline-dark m-5 d-flex justify-content-center">
+            {{ data.form.submit(class = "form-control-label") }}
+        </div>
+
+    </form>
+</div>
+
+
+<div class="m-auto">
+    <small>
+        Aleady have an account  <a class="ml-2" href="{{ url_for('login') }}">Login</a>
+    </small>
+</div>
+
+{% endblock content %}

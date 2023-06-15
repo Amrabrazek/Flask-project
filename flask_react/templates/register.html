@@ -13,6 +13,14 @@
         <fieldset class = "form-group">
             <legend class="border-bottom mb4"></legend>
             <div class="form-group">
+                {{ data.form.username.label(class = "form-control-label") }}
+                {{ data.form.username(class = "form-control") }}
+            </div>
+        </fieldset>
+
+        <fieldset class = "form-group">
+            <legend class="border-bottom mb4"></legend>
+            <div class="form-group">
                 {{ data.form.email.label(class = "form-control-label") }}
 
                 {% if data.form.email.errors %}

@@ -4,7 +4,8 @@
 # Imports
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
-from wtforms.validators import DataRequired, Length, Email, EqualTo
+from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
+from flask_react.models import User
 
 # Classes that repreasent our forms in python
 class RegistrationForm(FlaskForm):
@@ -40,8 +41,19 @@ class RegistrationForm(FlaskForm):
         'Sign Up'
     )
 
-class LoginForm(FlaskForm):
+    # custom validaion functions 
+    def validate_username(self, username):
+        user = User.query.filter_by(username=username.data).first()
+        if user:
+            raise ValidationError("Username is taken")
+    
+    def validate_email(self, email):
+        user = User.query.filter_by(email=email.data).first()
+        if user:
+            raise ValidationError("emial is taken")
 
+
+class LoginForm(FlaskForm):
     email = StringField(
         'Email',
         validators=[

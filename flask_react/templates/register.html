@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "base2.html" %}
 
 <!-- {% block styling %}
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='about.css') }}">
@@ -7,14 +7,54 @@
 {% block content %}
 
 <div>
-    <form action="" method="POST">
+    <form action="" method="POST" enctype="multipart/form-data">
         {{ data.form.hidden_tag() }}
+
+        <fieldset class = "form-group">
+            <legend class="border-bottom mb4"></legend>
+            <div class="form-group">
+                {{ data.form.first_name.label(class = "form-control-label") }}
+                {{ data.form.first_name(class = "form-control") }}
+            </div>
+        </fieldset>
+
+        <fieldset class = "form-group">
+            <legend class="border-bottom mb4"></legend>
+            <div class="form-group">
+                {{ data.form.middle_name.label(class = "form-control-label") }}
+                {{ data.form.middle_name(class = "form-control") }}
+            </div>
+        </fieldset>
+
+        <fieldset class = "form-group">
+            <legend class="border-bottom mb4"></legend>
+            <div class="form-group">
+                {{ data.form.last_name.label(class = "form-control-label") }}
+                {{ data.form.last_name(class = "form-control") }}
+            </div>
+        </fieldset>
+
+        <fieldset class = "form-group">
+            <legend class="border-bottom mb4"></legend>
+            <div class="form-group">
+                {{ data.form.date.label(class = "form-control-label") }}
+                {{ data.form.date(class = "form-control") }}
+            </div>
+        </fieldset>
 
         <fieldset class = "form-group">
             <legend class="border-bottom mb4"></legend>
             <div class="form-group">
                 {{ data.form.username.label(class = "form-control-label") }}
                 {{ data.form.username(class = "form-control") }}
+            </div>
+        </fieldset>
+
+        <fieldset class = "form-group">
+            <legend class="border-bottom mb4"></legend>
+            <div class="form-group">
+                {{ data.form.image.label(class = "form-control-label") }}
+                {{ data.form.image(class = "form-control") }}
             </div>
         </fieldset>
 

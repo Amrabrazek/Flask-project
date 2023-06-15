@@ -3,13 +3,39 @@
 
 # Imports
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField
+from wtforms import StringField, PasswordField, SubmitField, DateField, FileField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 from flask_react.models import User
+
 
 # Classes that repreasent our forms in python
 class RegistrationForm(FlaskForm):
     # Allow Username from 2 chars to 20 chars
+    first_name = StringField(
+        'First_Name',
+        validators=[
+            DataRequired(),
+            Length(min=2, max=20)
+        ]
+    )
+    middle_name = StringField(
+        'Middle_Name',
+        validators=[
+            Length(min=2, max=20)
+        ]
+    )
+    last_name = StringField(
+        'Larst_Name',
+        validators=[
+            DataRequired(),
+            Length(min=2, max=20)
+        ]
+    )
+    date = DateField(
+        'Date',
+        format= '%Y-%m-%d'
+        )
+    
     username = StringField(
         'Username',
         validators=[
@@ -17,6 +43,9 @@ class RegistrationForm(FlaskForm):
             Length(min=2, max=20)
         ]
     )
+    
+    image = FileField('Image')
+
     email = StringField(
         'Email',
         validators=[

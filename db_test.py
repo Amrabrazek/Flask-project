@@ -1,5 +1,5 @@
 from flask_react import db, app
-from flask_react.models import User, Post
+from flask_react.models import User, Post, Friendship
 import sys
 
 def create_db():
@@ -25,6 +25,15 @@ def create_post():
         post_1 = Post(title="test2", content='test content2', user_id = user.id)
         db.session.add(post_1)
         db.session.commit()
+
+def create_friendship():
+    with app.app_context():
+        new_friendship = Friendship(user_id = 18 , friend_id = 6)
+        new_friendship2 = Friendship(user_id = 6 , friend_id = 18)
+        db.session.add(new_friendship)
+        db.session.add(new_friendship2)
+        db.session.commit()
+
 
 # read 
 def read_user():

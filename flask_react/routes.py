@@ -1,6 +1,6 @@
 from flask import render_template, redirect, url_for, flash, request, Blueprint, send_from_directory
 from flask_react import  app, bcrypt, db
-from flask_react.models import User, Post
+from flask_react.models import User, Post, Friendship
 from flask_react.forms import RegistrationForm, LoginForm, PostForm
 from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.utils import secure_filename
@@ -41,6 +41,27 @@ def home():
 
         flash("Post added Successful", "success")
         return redirect(url_for('home'))
+    
+    friend_posts = []
+    friendships = Friendship.query.filter((Friendship.user_id == current_user.id)).all()
+    for friendship in friendships:
+        # friend_id = friendship.friend_id if friendship.user_id == user_id else friendship.user_id
+        friend_posts += User.query.get(friendship.friend_id).posts
+
+    print('00000000000000000000000000000000000')
+
+    friends_posts  = list(filter(lambda post : post.status == 'Friends_only' , friend_posts ))
+    
+    posts_id = []
+
+    for post in friends_posts:
+        posts_id.append(post.id)
+
+    print(posts_id)
+    print(friends_posts)
+    # for post in friend_posts:
+    #     print(post.status)
+    # print(friend_posts)
 
     posts_onlyme = db.session.query(
             Post,
@@ -50,18 +71,37 @@ def home():
         .filter(Post.user_id == current_user.id)\
         .order_by(Post.date.desc())\
         .all()
+    
+    # print('--------------------------------')
+    # print(posts_onlyme)
+    # posts_friends = db.session.query(
+    #     Post,
+
+    friendsandI_posts = db.session.query(
+            Post,
+            User
+        )\
+        .join( User, Post.user_id == User.id)\
+        .filter(Post.id.in_(posts_id))\
+        .order_by(Post.date.desc())\
+        .all()
+    
+    print('--------------------------------')
+    for post in friendsandI_posts:
+        print(post.Post.id)
+    # print(friendsandI_posts[2].user_id)
 
     posts_public = db.session.query(
             Post,
             User
         )\
         .join( User, Post.user_id == User.id)\
-        .filter((Post.status == "Public") | (Post.user_id == current_user.id))\
+        .filter((Post.status == "Public") | (Post.user_id == current_user.id) | (Post in friends_posts))\
         .order_by(Post.date.desc())\
         .all()
 
     endpoint_title = 'home'
-    return render_template('home.html', data={ 'title':endpoint_title, 'Navbar':Navbar, 'form': form, "posts_onlyme": posts_onlyme, "posts_public":posts_public  })
+    return render_template('home.html', data={ 'title':endpoint_title, 'Navbar':Navbar, 'form': form, "posts_onlyme": posts_onlyme, "posts_public":posts_public, "friends_only_posts":friendsandI_posts })
 
 @app.route('/about')
 @login_required

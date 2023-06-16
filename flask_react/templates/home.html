@@ -66,4 +66,39 @@
         </form>
     </div>
 
+    
+
+
+    <div><h1>posts</h1></div>
+
+
+    {% for post in data.posts %}
+
+        <div class="  containe post_container m-5 d-flex flex-column justify-content-around  border" >
+            
+            <div class=" m-2 d-flex personal_info" >
+                <div class="m-1 ">
+                    <img class="rounded-5" width="50px" src="../static/profile_images/WhatsApp Image 2023-06-12 at 12.31.11 PM.jpeg" alt="">
+                </div>
+                <div class="d-flex flex-column justify-content-center">
+                    <div class="d-flex align-content-center justify-content-around ">{{post.User.first_name}} {{post.User.last_name}}</div>
+                    <div>
+                        <small>{{post.User.username}}</small></div>
+                </div>
+                <div class="w-50"></div>
+                <div class="ms-0">add friend </div>
+            </div>
+            <hr>
+            <div class="m-2 d-flex post-info flex-column">
+                <div>{{post.Post.title}}</div>
+                <div class="d-flex justify-content-center"><div>{{post.Post.content}}</div></div>
+
+            </div>
+            
+        </div>
+
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sapiente, earum eveniet laudantium quaerat voluptatibus, doloribus sit, impedit sint magnam labore fugit ut molestias consequuntur cumque nihil recusandae. Officiis iusto sapiente perferendis, iste aliquid sint cupiditate veritatis accusantium, nesciunt culpa provident quidem consequatur optio doloremque laboriosam odio quisquam quaerat blanditiis tenetur. Ullam earum quo nulla saepe excepturi voluptates eos! Cum magnam, sed libero nobis labore expedita sunt ut minima corrupti fugit, eum ad! Incidunt quae quo qui exercitationem, minima ipsum doloribus blanditiis omnis assumenda ex aperiam pariatur accusantium numquam eius optio aliquid alias. Quod perferendis quas sunt ducimus ut? Voluptate, ipsum?
+
+    {% endfor %}
+
 {% endblock content %}

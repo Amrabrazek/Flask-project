@@ -20,8 +20,8 @@ users = Blueprint(
 
 Navbar = ['home', 'profile', "friends" , 'logout']
 
-@app.route('/home')
-@app.route('/')
+@app.route('/home', methods = ['GET', 'POST'])
+@app.route('/', methods = ['GET', 'POST'])
 @login_required
 def home():
 
@@ -37,8 +37,20 @@ def home():
             db.session.add(new_post)
             db.session.commit()
 
+        flash("Post added Successful", "success")
+        return redirect(url_for('home'))
+
+    posts = db.session.query(
+            Post,
+            User
+        )\
+        .join( User, Post.user_id == User.id)\
+        .filter(Post.user_id == current_user.id)\
+        .order_by(Post.date.desc())\
+        .all()
+    
     endpoint_title = 'home'
-    return render_template('home.html', data={ 'title':endpoint_title, 'Navbar':Navbar, 'form': form  })
+    return render_template('home.html', data={ 'title':endpoint_title, 'Navbar':Navbar, 'form': form, "posts": posts  })
 
 @app.route('/about')
 @login_required

@@ -123,7 +123,7 @@ class PostForm(FlaskForm):
         )
     
     status = SelectField(u'Share with', 
-                        choices=[('cpp', 'C++'), ('py', 'Python'), ('text', 'Plain Text')]
+                        choices=[('Public', 'Public'), ('Friends_only', 'Friends_only'), ('Only_me', 'Only_me')]
         )
     submit = SubmitField(
         'Add Post'

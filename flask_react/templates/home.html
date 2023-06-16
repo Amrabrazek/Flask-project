@@ -9,4 +9,61 @@
 
     <h1>This is homepage template</h1>
 
+    <div>
+        <form action="" method="POST">
+            {{ data.form.hidden_tag() }}
+    
+            <fieldset class = "form-group">
+                <legend class="border-bottom mb4"></legend>
+                <div class="form-group">
+                    {{ data.form.title.label(class = "form-control-label") }}
+    
+                    {% if data.form.title.errors %}
+                        {{ data.form.title(class = "form-control is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in data.form.title.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ data.form.title(class = "form-control") }}
+                        
+                    {% endif %}
+                </div>
+            </fieldset>
+    
+            <fieldset class = "form-group">
+                <legend class="border-bottom mb4"></legend>
+                <div class="form-group">
+                    {{ data.form.content.label(class = "form-control-label") }}
+                    {{ data.form.content(class = "form-control") }}
+                </div>
+            </fieldset>
+
+            <fieldset class = "form-group">
+                <legend class="border-bottom mb4"></legend>
+                <div class="form-group">
+                    {{ data.form.status.label(class = "form-control-label") }}
+    
+                    {% if data.form.status.errors %}
+                        {{ data.form.status(class = "form-control is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in data.form.status.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ data.form.status(class = "form-control") }}
+                        
+                    {% endif %}
+                </div>
+            </fieldset>
+    
+            <div class="form-group btn btn-outline-dark m-5 d-flex justify-content-center">
+                {{ data.form.submit(class = "form-control-label") }}
+            </div>
+    
+        </form>
+    </div>
+
 {% endblock content %}

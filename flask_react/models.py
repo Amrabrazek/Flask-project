@@ -1,5 +1,5 @@
 from flask_react import db, login_manager
-from datetime import datetime
+from datetime import datetime, date
 from flask_login import UserMixin
 
 
@@ -13,7 +13,11 @@ class User (db.Model, UserMixin):
     middle_name = db.Column(db.String(20), nullable=False)
     last_name = db.Column(db.String(20), nullable=False)
     birth_date = db.Column(db.DateTime(), nullable=False)
-    image = db.Column(db.String(255), nullable=True)
+
+    # image = db.Column(db.String(255), nullable=True)
+    profile_image_data = db.Column(db.LargeBinary, nullable=True)
+    profile_image_filename = db.Column(db.String(100), nullable=True)
+
     username = db.Column(db.String(20), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(60), nullable=False )

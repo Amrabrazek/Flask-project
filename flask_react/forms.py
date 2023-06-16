@@ -3,9 +3,10 @@
 
 # Imports
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, DateField, FileField
-from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
+from wtforms import StringField, PasswordField, SubmitField, DateField, FileField, TextAreaField, SelectField
+from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError, InputRequired
 from flask_react.models import User
+from flask_wtf.file import FileField, FileAllowed, FileRequired
 
 
 # Classes that repreasent our forms in python
@@ -25,7 +26,7 @@ class RegistrationForm(FlaskForm):
         ]
     )
     last_name = StringField(
-        'Larst_Name',
+        'Last_Name',
         validators=[
             DataRequired(),
             Length(min=2, max=20)
@@ -44,7 +45,12 @@ class RegistrationForm(FlaskForm):
         ]
     )
     
-    image = FileField('Image')
+    profile_image = FileField(
+        'Profile Image', 
+            )
+    #    validators=[
+    #         FileAllowed(['jpeg', 'jpg', 'png']), 
+    #         FileRequired()]
 
     email = StringField(
         'Email',
@@ -99,3 +105,27 @@ class LoginForm(FlaskForm):
     submit = SubmitField(
         'Login'
     )
+
+class PostForm(FlaskForm):
+    title = StringField(
+        'Title',
+        validators=[
+            DataRequired(),
+            Length(min=2, max=20)
+        ]
+        )
+
+    content = TextAreaField(
+        'Post Content',
+        validators=[
+            DataRequired()
+        ]
+        )
+    
+    status = SelectField(u'Share with', 
+                        choices=[('cpp', 'C++'), ('py', 'Python'), ('text', 'Plain Text')]
+        )
+    submit = SubmitField(
+        'Add Post'
+    )
+    

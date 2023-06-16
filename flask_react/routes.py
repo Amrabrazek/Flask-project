@@ -1,11 +1,15 @@
 from flask import render_template, redirect, url_for, flash, request, Blueprint
 from flask_react import  app, bcrypt, db
 from flask_react.models import User, Post
-from flask_react.forms import RegistrationForm, LoginForm
+from flask_react.forms import RegistrationForm, LoginForm, PostForm
 from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.utils import secure_filename
 import os 
-from datetime import datetime
+from datetime import datetime, date
+from PIL import Image
+import io
+import base64
+
 
 
 users = Blueprint(
@@ -20,8 +24,21 @@ Navbar = ['home', 'profile', "friends" , 'logout']
 @app.route('/')
 @login_required
 def home():
+
+    form = PostForm()
+
+    if form.validate_on_submit():
+        
+        with app.app_context():
+            new_post = Post(title=form.title.data,
+                            content=form.content.data,
+                            status=form.status.data,
+                            user_id=current_user.id)
+            db.session.add(new_post)
+            db.session.commit()
+
     endpoint_title = 'home'
-    return render_template('home.html', data={ 'title':endpoint_title, 'Navbar':Navbar})
+    return render_template('home.html', data={ 'title':endpoint_title, 'Navbar':Navbar, 'form': form  })
 
 @app.route('/about')
 @login_required
@@ -33,6 +50,7 @@ def about():
 
 @app.route('/register', methods = ['GET', 'POST'])
 def register():
+
     form = RegistrationForm()
 
     if form.validate_on_submit():
@@ -40,21 +58,32 @@ def register():
         with app.app_context():
             # birth_date = form.date.data
             # birth_date = birth_date.date()
-            image_bytes = form.image.data.read()
+            # print(form.image.data)
+            profile_image = form.profile_image.data
             hashed_pw = bcrypt.generate_password_hash(form.password.data)
             new_user = User(middle_name=form.middle_name.data,
                             first_name=form.first_name.data,
                             last_name=form.last_name.data,
                             username=form.username.data,
                             birth_date=form.date.data,
-                            image=image_bytes,
+
+                            # image=image_bytes,
+                            profile_image_data = profile_image.read(),
+                            profile_image_filename = profile_image.filename,
+
                             email=form.email.data,
                             password=hashed_pw)
             db.session.add(new_user)
             db.session.commit()
 
-        file = form.image.data # First grab the file
+        # UPLOADING IMAGE TO STATIC/PROFILE_IMAGES
+        file = form.profile_image.data # First grab the file
         file.save(os.path.join(os.path.abspath(os.path.dirname(__file__)),app.config['UPLOAD_FOLDER'],secure_filename(file.filename))) # Then save the file
+
+        # profile_image = request.files['profile_image']
+        # filename = secure_filename(profile_image.filename)
+        # profile_image.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+
         # return "File has been uploaded."
 
         flash("Registered Successful", "success")
@@ -101,9 +130,22 @@ def logout():
 @app.route('/profile')
 @login_required
 def profile():
-        image = current_user.image.decode('utf-8')
+        # image = current_user.image.decode('utf-8')
+        # print(current_user.image)
+        today = date.today()
+        born = current_user.birth_date
+        age = today.year - born.year - ((today.month, today.day) < (born.month, born.day))
         endpoint_title = 'profile'
-        return render_template('profile.html', data={ 'title':endpoint_title, 'Navbar':Navbar, 'user':current_user, 'image':image })
+
+
+        image = Image.open(io.BytesIO(current_user.profile_image_data))
+
+        buffered = io.BytesIO()
+        image.save(buffered, format="JPEG")
+        img_str = base64.b64encode(buffered.getvalue()).decode()
+
+
+        return render_template('profile.html', data={ 'title':endpoint_title, 'Navbar':Navbar, 'user':current_user, 'age': age, 'image':image, "img_data":img_str  })
 
 @app.route('/friends')
 @login_required

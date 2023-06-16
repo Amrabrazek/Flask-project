@@ -2,24 +2,31 @@
 
 {% block content %}
 
+<hr>
+
     <h1>This is profile template</h1>
+    <!-- {{  data.user}}
     {{ data.user.first_name }}
     {{ data.user.middle_name }}
     {{ data.user.last_name }}
-    {{ data.image }}
-    {{ data.age }}
+    {{ data.img_data }}
+    {{ data.age }} -->
+    {{ data.user.profile_image_filename }}
+    <!-- {{ data.user.profile_image_filename }} -->
+
 
     <!-- <img src="data:image/jpeg;base64,{{ img_data }}" alt="Image"> -->
 
     <img src="" alt="">
 
     {% if current_user.profile_image_data %}
-        <img src="{{ url_for('static', filename='../../static/profile_images/' + current_user.profile_image_filename) }}" alt="Profile Picture" width="200">
-        <img src="{{ '../static/profile_images/' + current_user.profile_image_filename }}" alt="Profile Picture" width="200">
+        <!-- <img src="{{ url_for('static', filename='../../static/profile_images/' + current_user.profile_image_filename) }}" alt="Profile Picture" width="200"> -->
+        <img src="{{ '../static/profile_images/' + data.user.profile_image_filename }}" alt="Profile Picture" width="200">
     {% else %}
         <p>No profile picture uploaded</p>
     {% endif %}
     
+    <!-- <img src="../static/profile_images/2.JPG" alt="Profile Picture" width="200"> -->
 
     <!-- for loop -> 1 bracket with % -->
     <!-- variables -> 2 brackets -->

@@ -7,17 +7,24 @@
 
 {% block content %}
 
-    <h1>This is homepage template</h1>
+<div class="d-flex w-100 justify-content-around m-5 ">
+    <button data-text="Awesome" class="button">
+        <span class="actual-text">&nbsp;CONECT&nbsp;</span>
+        <span class="hover-text" aria-hidden="true">&nbsp;CONECT&nbsp;</span>
+    </button>
+</div>
+
+<h1>Add Post</h1>
 
     <div>
         <form action="" method="POST">
             {{ data.form.hidden_tag() }}
-    
+            
             <fieldset class = "form-group">
                 <legend class="border-bottom mb4"></legend>
                 <div class="form-group">
                     {{ data.form.title.label(class = "form-control-label") }}
-    
+                    
                     {% if data.form.title.errors %}
                         {{ data.form.title(class = "form-control is-invalid") }}
                         <div class="invalid-feedback">
@@ -31,7 +38,7 @@
                     {% endif %}
                 </div>
             </fieldset>
-    
+            
             <fieldset class = "form-group">
                 <legend class="border-bottom mb4"></legend>
                 <div class="form-group">
@@ -44,7 +51,7 @@
                 <legend class="border-bottom mb4"></legend>
                 <div class="form-group">
                     {{ data.form.status.label(class = "form-control-label") }}
-    
+                    
                     {% if data.form.status.errors %}
                         {{ data.form.status(class = "form-control is-invalid") }}
                         <div class="invalid-feedback">
@@ -58,47 +65,111 @@
                     {% endif %}
                 </div>
             </fieldset>
-    
+            
             <div class="form-group btn btn-outline-dark m-5 d-flex justify-content-center">
                 {{ data.form.submit(class = "form-control-label") }}
             </div>
-    
+            
         </form>
     </div>
 
+
+<div><h1>Posts</h1></div>
     
+<div class="d-flex justify-content-around ">
+    <div class="form-check">
+        <input class="form-check-input" type="radio" name="exampleRadios" id="publicid" value="option1" checked onchange="checkRadio()" >
+        <label class="form-check-label" for="exampleRadios1">
+            All Posts
+        </label>
+    </div>
+    <div class="form-check">
+        <input class="form-check-input" type="radio" name="exampleRadios" id="friends_onlyid" value="option2" onchange="checkRadio()">
+        <label class="form-check-label" for="exampleRadios2">
+            Friends Posts
+        </label>
+    </div>
+    <div class="form-check">
+        <input class="form-check-input" type="radio" name="exampleRadios" id="only_meid" value="option3" onchange="checkRadio()">
+        <label class="form-check-label" for="exampleRadios3">
+            My Posts
+        </label>
+    </div>
+</div>
 
 
-    <div><h1>posts</h1></div>
+
+<div class="only_me_posts_container d-none" id="only_me_posts_container">
+{% for post in data.posts_onlyme %}
+        <div class="  containe post_container m-5 d-flex flex-column justify-content-around  border" >
+            
+            <div class=" m-2 d-flex personal_info" >
+                
+                <div class="m-1 ">
+                    <img class="rounded-5" width="50px" src="{{ '../static/profile_images/' + post.User.profile_image_filename }}" alt="">
+                </div>
+
+                <div class="d-flex w-100 justify-content-between">
+                    <div class="text-start d-flex flex-column justify-content-center">
+                        <div class=" text-start d-flex h5 mb-0 align-content-center justify-content-around ">{{post.User.first_name}} {{post.User.last_name}}</div>
+                        <div>
+                            <a class=" text-dark" href="{{ url_for('profile') }}"><small>{{post.User.username}}</small></div></a>
+                    </div>
+                    <!-- <div class="w-100"></div> -->
+                    <div class=" m-2 d-flex flex-column justify-content-center  ms-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-send-plus-fill" viewBox="0 0 16 16">
+                            <path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 1.59 2.498C8 14 8 13 8 12.5a4.5 4.5 0 0 1 5.026-4.47L15.964.686Zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.471-.47 1.178Z"/>
+                            <path d="M16 12.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Zm-3.5-2a.5.5 0 0 0-.5.5v1h-1a.5.5 0 0 0 0 1h1v1a.5.5 0 0 0 1 0v-1h1a.5.5 0 0 0 0-1h-1v-1a.5.5 0 0 0-.5-.5Z"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div class="m-2 d-flex post-info flex-column">
+                <div class="mb-2 h5 d-flex justify-content-around">{{post.Post.title}}</div>
+                <div class=" p-3  d-flex justify-content-center"><div>{{post.Post.content}}</div></div>
+            </div>
+            
+        </div>
+{% endfor %}
+</div>
 
 
-    {% for post in data.posts %}
+<div class="public_posts_container" id="public_posts_container">
+{% for post in data.posts_public %}
 
         <div class="  containe post_container m-5 d-flex flex-column justify-content-around  border" >
             
             <div class=" m-2 d-flex personal_info" >
+                
                 <div class="m-1 ">
-                    <img class="rounded-5" width="50px" src="../static/profile_images/WhatsApp Image 2023-06-12 at 12.31.11 PM.jpeg" alt="">
+                    <img class="rounded-5" width="50px" src="{{ '../static/profile_images/' + post.User.profile_image_filename }}" alt="">
                 </div>
-                <div class="d-flex flex-column justify-content-center">
-                    <div class="d-flex align-content-center justify-content-around ">{{post.User.first_name}} {{post.User.last_name}}</div>
-                    <div>
-                        <small>{{post.User.username}}</small></div>
+
+                <div class="d-flex w-100 justify-content-between">
+                    <div class="text-start d-flex flex-column justify-content-center">
+                        <div class=" text-start d-flex h5 mb-0 align-content-center justify-content-around ">{{post.User.first_name}} {{post.User.last_name}}</div>
+                        <div>
+                            <a class=" text-dark" href="{{ url_for('profile') }}"><small>{{post.User.username}}</small></div></a>
+                    </div>
+                    <!-- <div class="w-100"></div> -->
+                    <div class=" m-2 d-flex flex-column justify-content-center  ms-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-send-plus-fill" viewBox="0 0 16 16">
+                            <path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 4.995 3.178 1.59 2.498C8 14 8 13 8 12.5a4.5 4.5 0 0 1 5.026-4.47L15.964.686Zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.471-.47 1.178Z"/>
+                            <path d="M16 12.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Zm-3.5-2a.5.5 0 0 0-.5.5v1h-1a.5.5 0 0 0 0 1h1v1a.5.5 0 0 0 1 0v-1h1a.5.5 0 0 0 0-1h-1v-1a.5.5 0 0 0-.5-.5Z"/>
+                        </svg>
+                    </div>
                 </div>
-                <div class="w-50"></div>
-                <div class="ms-0">add friend </div>
             </div>
             <hr>
             <div class="m-2 d-flex post-info flex-column">
-                <div>{{post.Post.title}}</div>
-                <div class="d-flex justify-content-center"><div>{{post.Post.content}}</div></div>
-
+                <div class="mb-2 h5 d-flex justify-content-around">{{post.Post.title}}</div>
+                <div class=" p-3  d-flex justify-content-center"><div>{{post.Post.content}}</div></div>
             </div>
             
         </div>
+{% endfor %}
+</div>
 
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sapiente, earum eveniet laudantium quaerat voluptatibus, doloribus sit, impedit sint magnam labore fugit ut molestias consequuntur cumque nihil recusandae. Officiis iusto sapiente perferendis, iste aliquid sint cupiditate veritatis accusantium, nesciunt culpa provident quidem consequatur optio doloremque laboriosam odio quisquam quaerat blanditiis tenetur. Ullam earum quo nulla saepe excepturi voluptates eos! Cum magnam, sed libero nobis labore expedita sunt ut minima corrupti fugit, eum ad! Incidunt quae quo qui exercitationem, minima ipsum doloribus blanditiis omnis assumenda ex aperiam pariatur accusantium numquam eius optio aliquid alias. Quod perferendis quas sunt ducimus ut? Voluptate, ipsum?
-
-    {% endfor %}
 
 {% endblock content %}

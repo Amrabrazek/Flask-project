@@ -47,10 +47,10 @@ class RegistrationForm(FlaskForm):
     
     profile_image = FileField(
         'Profile Image', 
-            )
-    #    validators=[
-    #         FileAllowed(['jpeg', 'jpg', 'png']), 
-    #         FileRequired()]
+        validators=[
+            FileAllowed(['jpeg', 'jpg', 'png'], 'only images are allowed' ), 
+            FileRequired('File Field shoud not be empty')]
+    )
 
     email = StringField(
         'Email',

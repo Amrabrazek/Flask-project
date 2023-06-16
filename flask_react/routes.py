@@ -1,4 +1,4 @@
-from flask import render_template, redirect, url_for, flash, request, Blueprint
+from flask import render_template, redirect, url_for, flash, request, Blueprint, send_from_directory
 from flask_react import  app, bcrypt, db
 from flask_react.models import User, Post
 from flask_react.forms import RegistrationForm, LoginForm, PostForm
@@ -9,6 +9,8 @@ from datetime import datetime, date
 from PIL import Image
 import io
 import base64
+
+from flask_uploads import UploadSet, IMAGES, configure_uploads
 
 
 
@@ -40,7 +42,7 @@ def home():
         flash("Post added Successful", "success")
         return redirect(url_for('home'))
 
-    posts = db.session.query(
+    posts_onlyme = db.session.query(
             Post,
             User
         )\
@@ -48,9 +50,18 @@ def home():
         .filter(Post.user_id == current_user.id)\
         .order_by(Post.date.desc())\
         .all()
-    
+
+    posts_public = db.session.query(
+            Post,
+            User
+        )\
+        .join( User, Post.user_id == User.id)\
+        .filter((Post.status == "Public") | (Post.user_id == current_user.id))\
+        .order_by(Post.date.desc())\
+        .all()
+
     endpoint_title = 'home'
-    return render_template('home.html', data={ 'title':endpoint_title, 'Navbar':Navbar, 'form': form, "posts": posts  })
+    return render_template('home.html', data={ 'title':endpoint_title, 'Navbar':Navbar, 'form': form, "posts_onlyme": posts_onlyme, "posts_public":posts_public  })
 
 @app.route('/about')
 @login_required
@@ -73,9 +84,9 @@ def register():
             # print(form.image.data)
             profile_image = form.profile_image.data
             hashed_pw = bcrypt.generate_password_hash(form.password.data)
-            new_user = User(middle_name=form.middle_name.data,
-                            first_name=form.first_name.data,
-                            last_name=form.last_name.data,
+            new_user = User(middle_name=form.middle_name.data.capitalize(),
+                            first_name=form.first_name.data.capitalize(),
+                            last_name=form.last_name.data.capitalize(),
                             username=form.username.data,
                             birth_date=form.date.data,
 
@@ -89,20 +100,41 @@ def register():
             db.session.commit()
 
         # UPLOADING IMAGE TO STATIC/PROFILE_IMAGES
-        file = form.profile_image.data # First grab the file
-        file.save(os.path.join(os.path.abspath(os.path.dirname(__file__)),app.config['UPLOAD_FOLDER'],secure_filename(file.filename))) # Then save the file
 
+
+        file = form.profile_image.data # First grab the file
+        filename = secure_filename(file.filename)
+        file.seek(0)
+        file.save(os.path.join(os.path.abspath(os.path.dirname(__file__)),app.config['UPLOAD_FOLDER'],filename)) # Then save the file
+        # file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         # profile_image = request.files['profile_image']
         # filename = secure_filename(profile_image.filename)
         # profile_image.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
         # return "File has been uploaded."
 
+        # photos = UploadSet("profile_image", IMAGES)
+        # configure_uploads(app, photos)
+
+        # filename = photos.save(form.profile_image.data)
+        # file_url = url_for('get_file', filename=filename)
+
+        # pic = form.profile_image.data
+        # pic_name = secure_filename(pic.filename)
+        # print(pic_name)
+        # pic_type = pic.mimetype
+        # print(pic_type)
+
         flash("Registered Successful", "success")
         return redirect(url_for('login'))
     
     endpoint_title = 'login'
     return render_template('register.html', data={'title':endpoint_title, 'Navbar':Navbar, 'form':form})
+
+
+# @app.route('/uploads/<filename>')
+# def get_file(filename):
+#     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
 
 @app.route('/login', methods = ['GET', 'POST'])
@@ -138,6 +170,11 @@ def logout():
     logout_user()
     return redirect(url_for('login'))
 
+# @app.route('/display/<filename>')
+# def display_image(filename):
+#     #print('display_image filename: ' + filename)
+#     return redirect(url_for('static', filename='profile_images/' + filename), code=301)
+
 
 @app.route('/profile')
 @login_required
@@ -150,14 +187,14 @@ def profile():
         endpoint_title = 'profile'
 
 
-        image = Image.open(io.BytesIO(current_user.profile_image_data))
+        # image = Image.open(io.BytesIO(current_user.profile_image_data))
 
-        buffered = io.BytesIO()
-        image.save(buffered, format="JPEG")
-        img_str = base64.b64encode(buffered.getvalue()).decode()
+        # buffered = io.BytesIO()
+        # image.save(buffered, format="JPEG")
+        # img_str = base64.b64encode(buffered.getvalue()).decode()
 
 
-        return render_template('profile.html', data={ 'title':endpoint_title, 'Navbar':Navbar, 'user':current_user, 'age': age, 'image':image, "img_data":img_str  })
+        return render_template('profile.html', data={ 'title':endpoint_title, 'Navbar':Navbar, 'user':current_user, 'age': age  })
 
 @app.route('/friends')
 @login_required

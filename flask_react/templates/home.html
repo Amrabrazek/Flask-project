@@ -7,96 +7,6 @@
 
 {% block content %}
 
-<div class="addbutton" onclick="scrollToTop()" >
-    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-plus-circle-fill" viewBox="0 0 16 16">
-    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
-    </svg>
-</div>
-
-
-<!-- edit window -->
-{% if data.post_to_edit %}
-    <div class="edit_post_container" id="edit_post_container_id">
-
-        <!-- close sign -->
-        <a class="text-dark closesign" href="{{ url_for('home') }}"  onclick="closetab()">
-            <div  >
-                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-x-square-fill" viewBox="0 0 16 16">
-                    <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm3.354 4.646L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 1 1 .708-.708z"/>
-                </svg>
-            </div>
-        </a>
-
-        <!-- title -->
-        <div class="d-flex justify-content-around"> 
-            <h1>Edit Post</h1>
-        </div>
-
-        <!-- edit form -->
-        <div class="d-flex flex-column align-content-around border-1" >
-            <form action="" method="POST">
-                {{ data.form.hidden_tag() }}
-                
-                <!-- title -->
-                <fieldset class = "form-group">
-                    <legend class="border-bottom mb4"></legend>
-                    <div class="form-group">
-                        {{ data.form.title.label(class = "form-control-label") }}
-                        
-                        {% if data.form.title.errors %}
-                            {{ data.form.title(class = "form-control is-invalid") }}
-                            <div class="invalid-feedback">
-                                {% for error in data.form.title.errors %}
-                                    <span>{{ error }}</span>
-                                {% endfor %}
-                            </div>
-                        {% else %}
-                            {{ data.form.title(class = "input_x form-control", value= data.post_to_edit.title)  }}
-                        {% endif %}
-                    </div>
-                </fieldset>
-                
-                <!-- content -->
-                <fieldset class = "form-group">
-                    <legend class="border-bottom mb4"></legend>
-                    <div class="form-group">
-                        {{ data.form.content.label(class = "form-control-label") }}
-                        {{ data.form.content(class = "form-control", value=data.post_to_edit.content, id="edit_form_content",onchange="openEditForm({{data.post_to_edit.content}})")  }}
-                    </div>
-                </fieldset>
-
-                <!-- share with status -->
-                <fieldset class = "form-group" onchange="">
-                    <legend class="border-bottom mb4"></legend>
-                    <div class="form-group">
-                        {{ data.form.status.label(class = "form-control-label") }}
-                        
-                        {% if data.form.status.errors %}
-                            {{ data.form.status(class = "form-control is-invalid") }}
-                            <div class="invalid-feedback">
-                                {% for error in data.form.status.errors %}
-                                    <span>{{ error }}</span>
-                                {% endfor %}
-                            </div>
-                        {% else %}
-                            {{ data.form.status(class = "form-control ", value= data.post_to_edit.status ) }}
-                            
-                        {% endif %}
-                    </div>
-                </fieldset>
-
-                <hr class="mt-4 mb-2">
-                
-                <!-- submit button  -->
-                <div class="d-flex justify-content-around">
-                    {{ data.form.submit(class = "form-control-label form-group btn btn-outline-dark m-5 d-flex justify-content-center") }}
-                </div>
-                
-            </form>
-        </div>
-</div>
-{% endif %}
-
 <!-- title -->
 <div class="d-flex w-100 justify-content-around m-5 ">
     <button data-text="Awesome" class="button">
@@ -158,8 +68,8 @@
                 </div>
             </fieldset>
             
-            <div class="form-group btn btn-outline-dark m-5 d-flex justify-content-center">
-                {{ data.form.submit(class = "form-control-label") }}
+            <div class="d-flex justify-content-around">
+                {{ data.form.submit(class = "form-control-label form-group btn btn-outline-dark m-5 d-flex justify-content-center w-50") }}
             </div>
             
         </form>
@@ -369,6 +279,97 @@
                 
             </div>
     {% endfor %}
+</div>
+
+
+<!-- edit window -->
+{% if data.post_to_edit %}
+    <div class="edit_post_container" id="edit_post_container_id">
+
+        <!-- close sign -->
+        <a class="text-dark closesign" href="{{ url_for('home') }}"  onclick="closetab()">
+            <div  >
+                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-x-square-fill" viewBox="0 0 16 16">
+                    <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm3.354 4.646L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 1 1 .708-.708z"/>
+                </svg>
+            </div>
+        </a>
+
+        <!-- title -->
+        <div class="d-flex justify-content-around"> 
+            <h1>Edit Post</h1>
+        </div>
+
+        <!-- edit form -->
+        <div class="d-flex flex-column align-content-around border-1" >
+            <form action="" method="POST">
+                {{ data.form.hidden_tag() }}
+                
+                <!-- title -->
+                <fieldset class = "form-group">
+                    <legend class="border-bottom mb4"></legend>
+                    <div class="form-group">
+                        {{ data.form.title.label(class = "form-control-label") }}
+                        
+                        {% if data.form.title.errors %}
+                            {{ data.form.title(class = "form-control is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in data.form.title.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ data.form.title(class = "input_x form-control", value= data.post_to_edit.title)  }}
+                        {% endif %}
+                    </div>
+                </fieldset>
+                
+                <!-- content -->
+                <fieldset class = "form-group">
+                    <legend class="border-bottom mb4"></legend>
+                    <div class="form-group">
+                        {{ data.form.content.label(class = "form-control-label") }}
+                        {{ data.form.content(class = "form-control", value=data.post_to_edit.content, id="edit_form_content",onchange="openEditForm({{data.post_to_edit.content}})")  }}
+                    </div>
+                </fieldset>
+
+                <!-- share with status -->
+                <fieldset class = "form-group" onchange="">
+                    <legend class="border-bottom mb4"></legend>
+                    <div class="form-group">
+                        {{ data.form.status.label(class = "form-control-label") }}
+                        
+                        {% if data.form.status.errors %}
+                            {{ data.form.status(class = "form-control is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in data.form.status.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ data.form.status(class = "form-control ", value= data.post_to_edit.status ) }}
+                            
+                        {% endif %}
+                    </div>
+                </fieldset>
+
+                <hr class="mt-4 mb-2">
+                
+                <!-- submit button  -->
+                <div class="d-flex justify-content-around">
+                    {{ data.form.submit(class = "form-control-label form-group btn btn-outline-dark m-5 d-flex justify-content-center") }}
+                </div>
+                
+            </form>
+        </div>
+</div>
+{% endif %}
+
+<!-- add post icon -->
+<div class="addbutton" onclick="scrollToTop()" >
+    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-plus-circle-fill" viewBox="0 0 16 16">
+    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
+    </svg>
 </div>
 
 

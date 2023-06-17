@@ -96,12 +96,12 @@ def home():
             User
         )\
         .join( User, Post.user_id == User.id)\
-        .filter((Post.status == "Public") | (Post.user_id == current_user.id) | (Post in friends_posts))\
+        .filter((Post.status == "Public") | (Post.user_id == current_user.id) | (Post.id.in_(posts_id)))\
         .order_by(Post.date.desc())\
         .all()
 
     endpoint_title = 'home'
-    return render_template('home.html', data={ 'title':endpoint_title, 'Navbar':Navbar, 'form': form, "posts_onlyme": posts_onlyme, "posts_public":posts_public, "friends_only_posts":friendsandI_posts })
+    return render_template('home.html', data={ 'title':endpoint_title, 'Navbar':Navbar, 'form': form, "user": current_user,  "posts_onlyme": posts_onlyme, "posts_public":posts_public, "friends_only_posts":friendsandI_posts, "friends_only_posts_ids":posts_id })
 
 @app.route('/about')
 @login_required

@@ -28,8 +28,8 @@ def create_post():
 
 def create_friendship():
     with app.app_context():
-        new_friendship = Friendship(user_id = 18 , friend_id = 6)
-        new_friendship2 = Friendship(user_id = 6 , friend_id = 18)
+        new_friendship = Friendship(user_id = 18 , friend_id = 12)
+        new_friendship2 = Friendship(user_id = 12 , friend_id = 18)
         db.session.add(new_friendship)
         db.session.add(new_friendship2)
         db.session.commit()

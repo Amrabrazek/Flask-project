@@ -18,12 +18,12 @@ function checkRadio() {
     } else if (friends_onlyid.checked) {
         console.log("friends")
         only_me_container.classList.add('d-none');
-        // friends_only_container.classList.remove('d-none');
+        friends_only_container.classList.remove('d-none');
         public_container.classList.add('d-none');
 
     } else {
         only_me_container.classList.remove('d-none');
-        // friends_only_container.classList.add('d-none');
+        friends_only_container.classList.add('d-none');
         public_container.classList.add('d-none');
     }
 }

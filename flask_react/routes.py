@@ -23,6 +23,8 @@ users = Blueprint(
 Navbar = ['home', 'profile', "friends" , 'logout']
 
 
+
+# delete post
 @app.route('/home/<post_id>', methods=['GET','POST'])
 @login_required
 def delete_Post(post_id):
@@ -39,14 +41,18 @@ def delete_Post(post_id):
     return redirect(url_for('home'))
     
 
+# home page & add post & edit post
 @app.route('/home', methods = ['GET', 'POST'])
 @app.route('/', methods = ['GET', 'POST'])
 @app.route('/edit/<post_id>', methods = ['GET', 'POST'])
 @login_required
 def home(post_id = ""):
 
+    print("home")
+    # edit post
     post_to_edit = ''
     if post_id :
+        print("true")
         post_to_edit = Post.query.filter(Post.id == post_id).first()
 
         form = PostForm(obj=post_to_edit)
@@ -55,28 +61,44 @@ def home(post_id = ""):
             with app.app_context():
                 form.populate_obj(post_to_edit)
                 post_to_edit = Post.query.filter(Post.id == post_id).first()
+                post_image = form.post_image.data
                 post_to_edit.title = form.title.data
                 post_to_edit.content = form.content.data
                 post_to_edit.status = form.status.data
+                post_to_edit.post_image_filename = post_image.filename
                 db.session.commit()
                 
             flash("Post updated Successful", "success")
             return redirect(url_for('home'))
 
 
-
-
+    # add post
     form = PostForm()
-
     if form.validate_on_submit():
-        
+        print("valid")
         with app.app_context():
+            post_imagex = form.post_image.data
+            # profile_image_data = post_image.read()
+            print("----------------------------------------------------")
+            print (post_imagex)
+            print (post_imagex)
+
             new_post = Post(title=form.title.data,
                             content=form.content.data,
                             status=form.status.data,
-                            user_id=current_user.id)
+                            user_id=current_user.id,
+                            # post_image_data = post_imagex.read(),
+                            # post_image_filename = post_imagex.filename,
+                            )
             db.session.add(new_post)
             db.session.commit()
+
+            if request.method == 'POST':
+                file = request.files.get('file')
+                if file is not None and file.filename != '':
+                    filename = secure_filename(file.filename) # First grab the file
+                    file.seek(0)
+                    file.save(os.path.join(os.path.abspath(os.path.dirname(__file__)),app.config['UPLOAD_FOLDER'],filename)) # Then save the file
 
         flash("Post added Successful", "success")
         return redirect(url_for('home'))
@@ -142,25 +164,23 @@ def home(post_id = ""):
     endpoint_title = 'home'
     return render_template('home.html', data={ 'title':endpoint_title, 'Navbar':Navbar, 'form': form, "user": current_user,  "posts_onlyme": posts_onlyme, "posts_public":posts_public, "friends_only_posts":friendsandI_posts, "friends_only_posts_ids":posts_id, 'post_to_edit':post_to_edit })
 
+
+# about page
 @app.route('/about')
 @login_required
 def about():
     endpoint_title = 'about'
     return render_template('about.html', data={ 'title':endpoint_title, 'Navbar':Navbar})
 
-
-
+# register page
 @app.route('/register', methods = ['GET', 'POST'])
 def register():
 
     form = RegistrationForm()
-
+    
     if form.validate_on_submit():
         
         with app.app_context():
-            # birth_date = form.date.data
-            # birth_date = birth_date.date()
-            # print(form.image.data)
             profile_image = form.profile_image.data
             hashed_pw = bcrypt.generate_password_hash(form.password.data)
             new_user = User(middle_name=form.middle_name.data.capitalize(),
@@ -169,7 +189,6 @@ def register():
                             username=form.username.data,
                             birth_date=form.date.data,
 
-                            # image=image_bytes,
                             profile_image_data = profile_image.read(),
                             profile_image_filename = profile_image.filename,
 
@@ -215,7 +234,7 @@ def register():
 # def get_file(filename):
 #     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
-
+# login page
 @app.route('/login', methods = ['GET', 'POST'])
 def login():
 
@@ -244,6 +263,7 @@ def login():
             
     return render_template('login.html', data={'title':endpoint_title, 'Navbar':Navbar, 'form':form})
 
+# logout page
 @app.route('/logout', methods = ['GET', 'POST'])
 def logout():
     logout_user()
@@ -253,7 +273,6 @@ def logout():
 # def display_image(filename):
 #     #print('display_image filename: ' + filename)
 #     return redirect(url_for('static', filename='profile_images/' + filename), code=301)
-
 
 @app.route('/profile')
 @login_required

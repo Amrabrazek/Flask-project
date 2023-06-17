@@ -16,7 +16,7 @@ class User (db.Model, UserMixin):
 
     # image = db.Column(db.String(255), nullable=True)
     profile_image_data = db.Column(db.LargeBinary, nullable=True)
-    profile_image_filename = db.Column(db.String(100), nullable=True)
+    profile_image_filename = db.Column(db.String(250), nullable=True)
     # profile_image_mimetype = db.Column(db.Text, nullable=True)
 
     username = db.Column(db.String(20), unique=True, nullable=False)
@@ -48,6 +48,9 @@ class Post (db.Model):
     title = db.Column(db.String(100), nullable=False)
     content = db.Column(db.Text, nullable=False)
     status = db.Column(db.String(10), nullable=False, default='public')
+    
+    post_image_data = db.Column(db.LargeBinary, nullable=True)
+    post_image_filename = db.Column(db.String(250), nullable=True)
     # status = db.Column(db.String(10), nullable=False, default='public', choices=['public', 'friends', 'onlyme'])
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     

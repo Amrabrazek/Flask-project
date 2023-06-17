@@ -121,10 +121,16 @@ class PostForm(FlaskForm):
             DataRequired()
         ]
         )
-    
+
     status = SelectField(u'Share with', 
                         choices=[('Public', 'Public'), ('Friends_only', 'Friends_only'), ('Only_me', 'Only_me')]
         )
+
+    
+    post_image= FileField(
+        'Image'
+    )
+    
     submit = SubmitField(
         'Save Post'
     )

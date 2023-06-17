@@ -22,10 +22,52 @@ users = Blueprint(
 
 Navbar = ['home', 'profile', "friends" , 'logout']
 
+
+@app.route('/home/<post_id>', methods=['GET','POST'])
+@login_required
+def delete_Post(post_id):
+
+    with app.app_context():
+
+        post_to_delete = Post.query.filter(Post.id == post_id).first()
+        print("===========================================")
+        print(post_to_delete)
+        db.session.delete(post_to_delete)
+        db.session.commit()
+
+    flash("Post deleted", "success")
+    return redirect(url_for('home'))
+    
+
 @app.route('/home', methods = ['GET', 'POST'])
 @app.route('/', methods = ['GET', 'POST'])
+@app.route('/edit/<post_id>', methods = ['GET', 'POST'])
 @login_required
-def home():
+def home(post_id = ""):
+
+    post_to_edit = ""
+    if post_id :
+        post_to_edit = Post.query.filter(Post.id == post_id).first()
+        print("post to edit")
+        print(post_to_edit.title)
+
+        form = PostForm()
+        if form.validate_on_submit():
+            print("valid")
+            print(form.title.data)
+            with app.app_context():
+                post_to_edit = Post.query.filter(Post.id == post_id).first()
+                post_to_edit.title = form.title.data
+                post_to_edit.content = form.content.data
+                post_to_edit.status = form.status.data
+                db.session.commit()
+                
+            flash("Post updated Successful", "success")
+            return redirect(url_for('home'))
+
+
+
+
 
     form = PostForm()
 
@@ -48,7 +90,7 @@ def home():
         # friend_id = friendship.friend_id if friendship.user_id == user_id else friendship.user_id
         friend_posts += User.query.get(friendship.friend_id).posts
 
-    print('00000000000000000000000000000000000')
+    # print('00000000000000000000000000000000000')
 
     friends_posts  = list(filter(lambda post : post.status == 'Friends_only' , friend_posts ))
     
@@ -57,8 +99,8 @@ def home():
     for post in friends_posts:
         posts_id.append(post.id)
 
-    print(posts_id)
-    print(friends_posts)
+    # print(posts_id)
+    # print(friends_posts)
     # for post in friend_posts:
     #     print(post.status)
     # print(friend_posts)
@@ -86,9 +128,9 @@ def home():
         .order_by(Post.date.desc())\
         .all()
     
-    print('--------------------------------')
-    for post in friendsandI_posts:
-        print(post.Post.id)
+    # print('--------------------------------')
+    # for post in friendsandI_posts:
+    #     print(post.Post.id)
     # print(friendsandI_posts[2].user_id)
 
     posts_public = db.session.query(
@@ -101,7 +143,7 @@ def home():
         .all()
 
     endpoint_title = 'home'
-    return render_template('home.html', data={ 'title':endpoint_title, 'Navbar':Navbar, 'form': form, "user": current_user,  "posts_onlyme": posts_onlyme, "posts_public":posts_public, "friends_only_posts":friendsandI_posts, "friends_only_posts_ids":posts_id })
+    return render_template('home.html', data={ 'title':endpoint_title, 'Navbar':Navbar, 'form': form, "user": current_user,  "posts_onlyme": posts_onlyme, "posts_public":posts_public, "friends_only_posts":friendsandI_posts, "friends_only_posts_ids":posts_id, 'post_to_edit':post_to_edit })
 
 @app.route('/about')
 @login_required

@@ -28,4 +28,30 @@ function checkRadio() {
     }
 }
 
+function scrollToTop() {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth' // Add smooth scrolling behavior
+    });
+
+    const input = document.getElementsByClassName('input_x')[0];
+    input.focus();
+}
+
 console.log("hello")
+
+
+
+function openEditForm(postId) {
+    // fetch('/edit_post/' + postId)
+    //     .then(response => response.json())
+    //     .then(data => {
+    //     // Populate form fields with data
+    //     document.getElementById('title').value = data.title;
+    //     document.getElementById('content').value = data.content;
+    //     // Show edit form
+    //     document.getElementById('edit-form').style.display = 'block';
+    // });
+
+    console.log(postId)
+}

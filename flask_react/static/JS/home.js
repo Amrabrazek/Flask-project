@@ -38,11 +38,35 @@ function scrollToTop() {
     input.focus();
 }
 
-console.log("hello")
+
+// window.onload = function() {
+//   // your script goes here
+//     console.log('Page loaded');
+//     postcontent = "edit content"
+//     edit_form_content = document.getElementById('edit_form_content')
+//     console.log(edit_form_content);
+//     edit_form_content.value = postcontent
+// };
+
+postcontent = "xxxxxxxxxxxxxx"
+edit_form_content = document.getElementById('edit_form_content')
+// console.log(postcontent);
+edit_form_content.innertext = postcontent
 
 
 
-function openEditForm(postId) {
+function openEditForm(postcontent) {
+    console.log("hi")
+
+    form = document.getElementById('edit_post_container_id');
+    form.classList.remove('edit_post_container');
+    form.classList.add("edit_post_container2")
+
+    edit_form_content = document.getElementById('edit_form_content')
+    console.log(postcontent);
+    edit_form_content.innertext = postcontent
+
+
     // fetch('/edit_post/' + postId)
     //     .then(response => response.json())
     //     .then(data => {
@@ -52,6 +76,11 @@ function openEditForm(postId) {
     //     // Show edit form
     //     document.getElementById('edit-form').style.display = 'block';
     // });
+}
 
-    console.log(postId)
+function closetab(){
+    form = document.getElementById('edit_post_container_id');
+    form.classList.remove("edit_post_container2")
+    form.classList.add('edit_post_container');
+    
 }

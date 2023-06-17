@@ -45,17 +45,15 @@ def delete_Post(post_id):
 @login_required
 def home(post_id = ""):
 
-    post_to_edit = ""
+    post_to_edit = ''
     if post_id :
         post_to_edit = Post.query.filter(Post.id == post_id).first()
-        print("post to edit")
-        print(post_to_edit.title)
 
-        form = PostForm()
+        form = PostForm(obj=post_to_edit)
+        
         if form.validate_on_submit():
-            print("valid")
-            print(form.title.data)
             with app.app_context():
+                form.populate_obj(post_to_edit)
                 post_to_edit = Post.query.filter(Post.id == post_id).first()
                 post_to_edit.title = form.title.data
                 post_to_edit.content = form.content.data
@@ -64,7 +62,6 @@ def home(post_id = ""):
                 
             flash("Post updated Successful", "success")
             return redirect(url_for('home'))
-
 
 
 

@@ -126,6 +126,6 @@ class PostForm(FlaskForm):
                         choices=[('Public', 'Public'), ('Friends_only', 'Friends_only'), ('Only_me', 'Only_me')]
         )
     submit = SubmitField(
-        'Add Post'
+        'Save Post'
     )
     
